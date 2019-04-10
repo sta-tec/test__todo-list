@@ -10,7 +10,6 @@ doc.addEventListener('DOMContentLoaded', function() {
     ev.preventDefault();
     createTask();
     refreshTaskBoard();
-    // evoke LS listener
   });
 });
 
@@ -20,8 +19,6 @@ function createTask() {
   const taskDate = form.elements[1].value;
   const taskDescr = form.elements[2].value;
   const task = new Task(taskName, taskDate, taskDescr);
-
-  console.log('>>>', task);
 
   LS.save(task.id, task);
 }
@@ -44,7 +41,25 @@ function liveTaskDelete(id) {
   refreshTaskBoard();
 }
 
-function taskTemplate({ statusCode = 0, id, name, date, descr }) {
+function liveStatusChange(id, statusCode) {
+  let task = LS.get(id);
+  if (task.statusCode === statusCode) return;
+  task.statusCode = statusCode;
+  LS.save(id, task);
+  refreshTaskBoard();
+}
+
+function liveEditTask(id) {
+  showEditForm();
+  let task = LS.get(id);
+}
+
+function showEditForm() {
+  doc.body.classList.add('editing-mode');
+  // TODO: add event listener to edit form background (for close and cancel changes)
+}
+
+function taskTemplate({ statusCode = 0, id, name, date, descr, wasEdited }) {
   const status = (() => {
     switch (statusCode) {
       case 0:
@@ -56,7 +71,8 @@ function taskTemplate({ statusCode = 0, id, name, date, descr }) {
     }
   })();
 
-  const editBtnTemplate = `<button id="btn-edit-task" class="btn btn_primary task__btn task__btn-edit"></button>`;
+  const editBtnTemplate = `<button onclick="liveEditTask(${id})" id="btn-edit-task" class="btn btn_primary task__btn task__btn-edit"></button>`;
+  const editedMark = `<span class="task__was-edited">edited</span>`;
 
   return `
   <li class="task task_${status}">
@@ -67,12 +83,13 @@ function taskTemplate({ statusCode = 0, id, name, date, descr }) {
         <div class="task__status">
           <span class="status__current">${status}</span>
           <ul class="status__dropdown">
-            <li class="status__option">pending</li>
-            <li class="status__option">in progress</li>
-            <li class="status__option">done</li>
+            <li onclick="liveStatusChange(${id},${0})" class="status__option">pending</li>
+            <li onclick="liveStatusChange(${id},${1})" class="status__option">in progress</li>
+            <li onclick="liveStatusChange(${id},${2})" class="status__option">done</li>
           </ul>
         </div>
       </div>
+      ${wasEdited ? editedMark : ''}
       <div class="task__controls">
         ${statusCode < 2 ? editBtnTemplate : ''}
         <button id="btn-delete-task" onclick="liveTaskDelete(${id})" class="btn btn_danger task__btn task__btn-delete"></button>
@@ -95,6 +112,7 @@ class Task {
     this.descr = descr;
     this.statusCode = 0;
     this.editable = true;
+    this.wasEdited = false;
     this.id = Date.now();
   }
 }

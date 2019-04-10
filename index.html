@@ -13,6 +13,33 @@
   </head>
 
   <body>
+    <div class="form-edit-wrp">
+      <form action="#" id="editing-form" class="editing-form">
+        <label class="form-item">
+          <span class="form-item__label">Task name</span>
+          <input
+            type="text"
+            id="input-name"
+            class="form__input form__item_inptext"
+          />
+        </label>
+        <label class="form-item">
+          <span class="form-item__label">Task decription</span>
+          <textarea
+            id="input-task"
+            class="form__input form__input_textarea"
+            rows="6"
+          ></textarea>
+        </label>
+        <div class="form-controls">
+          <button class="btn btn_warning">Cancel</button>
+          <button id="form-submit" class="btn btn_primary">
+            Create task
+          </button>
+        </div>
+      </form>
+    </div>
+
     <main class="page-wrp">
       <section class="container form-container">
         <form action="#" id="form" class="form">
