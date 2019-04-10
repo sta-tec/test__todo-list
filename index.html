@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Stearling test</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <main class="page-wrp">
+      <section class="container form-container">
+        <form action="#" id="form" class="form">
+          <label class="form-item">
+            <span class="form-item__label">Task name</span>
+            <input
+              type="text"
+              id="input-name"
+              class="form__input form__item_inptext"
+            />
+          </label>
+          <label class="form-item">
+            <sapn class="form-item__label">Creating date</sapn>
+            <input
+              type="text"
+              id="input-date"
+              class="form__input form__item_inptext"
+            />
+          </label>
+          <label class="form-item">
+            <span class="form-item__label">Task decription</span>
+            <textarea
+              id="input-task"
+              class="form__input form__input_textarea"
+              rows="6"
+            ></textarea>
+          </label>
+          <div class="form-controls">
+            <button id="form-submit" class="btn btn_primary">
+              Create task
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="container list-container">
+        <div class="list__block">
+          <div class="list__header">
+            <div class="header__controls">
+              <button class="btn btn__sort" id="sort-by-name">by name</button>
+              <button class="btn btn__sort" id="sort-by-date">by date</button>
+            </div>
+          </div>
+          <ul id="list" class="list__body"></ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="./ls.js" defer></script>
+    <script src="./script.js" defer></script>
+  </body>
+</html>
