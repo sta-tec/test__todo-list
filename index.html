@@ -13,28 +13,33 @@
   </head>
 
   <body>
-    <div class="form-edit-wrp">
+    <div id="popup-bg" class="form-edit-wrp">
       <form action="#" id="editing-form" class="editing-form">
         <label class="form-item">
           <span class="form-item__label">Task name</span>
+          <input type="text" class="form__input form__item_inptext" />
+        </label>
+        <label class="form-item">
+          <sapn class="form-item__label">Due date</sapn>
           <input
             type="text"
-            id="input-name"
+            id="input-task-date"
             class="form__input form__item_inptext"
           />
         </label>
         <label class="form-item">
           <span class="form-item__label">Task decription</span>
           <textarea
-            id="input-task"
-            class="form__input form__input_textarea"
+            class="form__input form__input_textarea textarea_edit"
             rows="6"
           ></textarea>
         </label>
-        <div class="form-controls">
-          <button class="btn btn_warning">Cancel</button>
-          <button id="form-submit" class="btn btn_primary">
-            Create task
+        <div class="form-controls form-controls_edit">
+          <button id="edit-cancel" class="btn btn_from btn_warning">
+            Cancel
+          </button>
+          <button type="submit" id="edit-submit" class="btn btn_primary">
+            Confirm edit
           </button>
         </div>
       </form>
@@ -47,22 +52,22 @@
             <span class="form-item__label">Task name</span>
             <input
               type="text"
-              id="input-name"
+              id="input-task-name"
               class="form__input form__item_inptext"
             />
           </label>
           <label class="form-item">
-            <sapn class="form-item__label">Creating date</sapn>
+            <sapn class="form-item__label">Due date</sapn>
             <input
               type="text"
-              id="input-date"
+              id="input-task-date"
               class="form__input form__item_inptext"
             />
           </label>
           <label class="form-item">
             <span class="form-item__label">Task decription</span>
             <textarea
-              id="input-task"
+              id="input-task-descr"
               class="form__input form__input_textarea"
               rows="6"
             ></textarea>
@@ -79,16 +84,22 @@
         <div class="list__block">
           <div class="list__header">
             <div class="header__controls">
-              <button class="btn btn__sort" id="sort-by-name">by name</button>
-              <button class="btn btn__sort" id="sort-by-date">by date</button>
+              <button class="btn btn__sort" id="sort-by-name">
+                by name
+              </button>
+              <button class="btn btn__sort" id="sort-by-date">
+                by date
+              </button>
             </div>
           </div>
-          <ul id="list" class="list__body"></ul>
+          <div class="list__body">
+            <ul id="list" class="list"></ul>
+          </div>
         </div>
       </section>
     </main>
 
     <script src="./ls.js" defer></script>
-    <script src="./script.js" defer></script>
+    <script src="./scropt.js" defer></script>
   </body>
 </html>
