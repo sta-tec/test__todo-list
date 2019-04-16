@@ -134,24 +134,27 @@ function showEditForm(id) {
   cancelBtn.addEventListener(
     'click',
     () => {
-      console.log('>>>');
       doc.body.classList.remove('editing-mode');
     },
     { once: true },
   );
 
-  editForm.addEventListener('submit', ev => {
-    ev.preventDefault();
-    const editedTask = {
-      ...task,
-      name: taskNameInp.value,
-      dueDate: taskDueInp.value,
-      descr: taskDescrInp.value,
+  editForm.addEventListener('submit', editFormSubmit());
+
+  function editFormSubmit() {
+    return function(event) {
+      event.preventDefault();
+      const editedTask = {
+        ...task,
+        name: taskNameInp.value,
+        dueDate: taskDueInp.value,
+        descr: taskDescrInp.value,
+      };
+      TDL.update(editedTask);
+      doc.body.classList.remove('editing-mode');
+      renderList();
     };
-    TDL.update(editedTask);
-    doc.body.classList.remove('editing-mode');
-    renderList();
-  });
+  }
 }
 
 // TODO: dueDate
