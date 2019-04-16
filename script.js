@@ -1,25 +1,86 @@
 const doc = document;
 const byId = id => doc.getElementById(id);
 
-const TDL = new TodoList();
+const TDL = new class {
+  constructor() {
+    this.LIST = Object.values(LS.getAll());
+  }
 
-doc.addEventListener('DOMContentLoaded', function() {
-  const form = byId('form');
+  saveList() {
+    LS.clear();
+    this.LIST.map(item => LS.set(item.id, item));
+  }
+  getTaskMap() {
+    return this.LIST.map(item => item.id);
+  }
+  getTask(id) {
+    const index = this.getTaskMap().indexOf(id);
+    return this.LIST[index];
+  }
+  addTask(item) {
+    this.LIST.push(item);
+    this.saveList();
+  }
+  getList() {
+    return this.LIST;
+  }
+  update(elm) {
+    const index = this.getTaskMap().indexOf(elm.id);
+    this.LIST.splice(index, 1, elm);
+    this.saveList();
+  }
+  remove(id) {
+    const index = this.getTaskMap().indexOf(id);
+    this.LIST.splice(index, 1);
+    this.saveList();
+  }
+  sortBy(param) {
+    switch (param) {
+      case 'name':
+        this.LIST.sort(compareByName);
+        break;
+      case 'date':
+        this.LIST.sort(compareByDate);
+        break;
+    }
+    this.saveList();
 
+    function compareByName(x, y) {
+      x = x.name.toLowerCase()[0];
+      y = y.name.toLowerCase()[0];
+      return x > y ? 1 : -1;
+    }
+    function compareByDate(x, y) {
+      return x.id - y.id;
+    }
+  }
+  statusChange(id, statusCode) {
+    const task = this.getTask(id);
+    if (task.statusCode === statusCode) return;
+    task.statusCode = statusCode;
+    this.saveList();
+  }
+}();
+
+doc.addEventListener('DOMContentLoaded', onLoad);
+
+/* functions */
+function onLoad() {
   renderList();
+  byId('form-submit').addEventListener('click', formSubmit());
+  byId('sort-by-name').addEventListener('click', () => liveSortBy('name'));
+  byId('sort-by-date').addEventListener('click', () => liveSortBy('date'));
+}
 
-  byId('form-submit').addEventListener('click', ev => {
-    ev.preventDefault();
+function formSubmit() {
+  return function(event) {
+    event.preventDefault();
     TDL.addTask(createTask());
     renderList();
     formReset('form');
-  });
+  };
+}
 
-  byId('sort-by-name').addEventListener('click', () => liveSortBy('name'));
-  byId('sort-by-date').addEventListener('click', () => liveSortBy('date'));
-});
-
-/* functions */
 function renderList() {
   byId('list').innerHTML = '';
 
@@ -148,64 +209,6 @@ function taskTemplate({
 }
 
 /* constructors */
-function TodoList() {
-  const LIST = Object.values(LS.getAll());
-  const saveList = () => {
-    LS.clear();
-    LIST.map(item => LS.set(item.id, item));
-  };
-  const taskMap = () => LIST.map(item => item.id);
-
-  const getTask = id => {
-    const index = taskMap().indexOf(id);
-    return LIST[index];
-  };
-
-  return {
-    getTask,
-    addTask: item => {
-      LIST.push(item);
-      saveList();
-    },
-    getList: () => LIST,
-    update: elm => {
-      const index = taskMap().indexOf(elm.id);
-      LIST.splice(index, 1, elm);
-      saveList();
-    },
-    remove: id => {
-      const index = taskMap().indexOf(id);
-      LIST.splice(index, 1);
-      saveList();
-    },
-    sortBy: param => {
-      switch (param) {
-        case 'name':
-          LIST.sort(compareByName);
-          break;
-        case 'date':
-          LIST.sort(compareByDate);
-          break;
-      }
-      saveList();
-      function compareByName(x, y) {
-        x = x.name.toLowerCase()[0];
-        y = y.name.toLowerCase()[0];
-        return x > y ? 1 : -1;
-      }
-      function compareByDate(x, y) {
-        return x.id - y.id;
-      }
-    },
-    statusChange: (id, statusCode) => {
-      const task = getTask(id);
-      if (task.statusCode === statusCode) return;
-      task.statusCode = statusCode;
-      saveList();
-    },
-  };
-}
-
 class Task {
   constructor(name, dueDate, descr) {
     this.dueDate = dueDate;
